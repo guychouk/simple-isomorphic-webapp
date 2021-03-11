@@ -9,7 +9,7 @@ import webpackHotMiddleware from "webpack-hot-middleware";
 import webpackServerConfig from "../../webpack/webpack.server.config";
 import webpackClientConfig from "../../webpack/webpack.client.config";
 
-import PromotionsRouter from "./PromotionsRouter";
+import UsersRouter from "./UsersRouter";
 
 const app = express();
 
@@ -35,7 +35,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(defaultErrorHandler);
 
-app.use("/promotions", PromotionsRouter);
+app.use("/users", UsersRouter);
 
 const uri = "mongodb://root:example@localhost:27018";
 const mongoClient = new MongoClient(uri, { useUnifiedTopology: true });
@@ -47,7 +47,7 @@ const mongoClient = new MongoClient(uri, { useUnifiedTopology: true });
     app.locals.db = {
       client: mongoClient,
       collections: {
-        promotions: mongoClient.db("exampledb").collection("promotions"),
+        users: mongoClient.db("exampledb").collection("users"),
       },
     };
 

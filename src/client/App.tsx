@@ -5,39 +5,39 @@ import React, { useState, useEffect } from "react";
 import { insertAt } from "../utils";
 import { Table, Button } from "./components";
 import {
-  PromotionDocument,
+  UserDocument,
   MongoDocument,
-  Promotion,
-} from "../types/promotion";
+  User,
+} from "../types/user";
 import {
-  deletePromotion,
-  newPromotion,
-  fetchPromotions,
-  generatePromotions,
-} from "./PromotionsService";
+  deleteUser,
+  newUser,
+  fetchUsers,
+  generateUsers,
+} from "./UserService";
 
 type ButtonActionEvent = React.MouseEvent<HTMLButtonElement, MouseEvent>;
 
 const App = () => {
   const [headers, setHeaders] = useState([] as Array<string>);
-  const [tableData, setTableData] = useState([] as Array<PromotionDocument>);
+  const [tableData, setTableData] = useState([] as Array<UserDocument>);
 
-  const onDelete = (e: ButtonActionEvent, promo: PromotionDocument) => {
-    const { _id: id } = promo;
+  const onDelete = (e: ButtonActionEvent, user: UserDocument) => {
+    const { _id: id } = user;
     (async () => {
-      await deletePromotion(id);
+      await deleteUser(id);
       setTableData(tableData.filter((td) => td._id !== id));
     })();
   };
 
-  const onDuplicate = (e: ButtonActionEvent, promo: PromotionDocument) => {
+  const onDuplicate = (e: ButtonActionEvent, promo: UserDocument) => {
     const { _id: id, ...doc } = promo;
     (async () => {
-      const { body }: { body: Array<PromotionDocument> } = await newPromotion(
+      const { body }: { body: Array<UserDocument> } = await newUser(
         doc
       );
       const i = _.findIndex(tableData, { _id: id });
-      const updatedTableData = insertAt<PromotionDocument>(
+      const updatedTableData = insertAt<UserDocument>(
         tableData,
         i,
         body[0]
@@ -48,9 +48,9 @@ const App = () => {
 
   const seedDb = (e: ButtonActionEvent) => {
     (async () => {
-      const promotions = await generatePromotions();
-      setHeaders(Object.keys(promotions[0]).filter((k) => k !== "_id"));
-      setTableData(promotions);
+      const users = await generateUsers();
+      setHeaders(Object.keys(users[0]).filter((k) => k !== "_id"));
+      setTableData(users);
     })();
   };
 
@@ -66,7 +66,7 @@ const App = () => {
   return (
     <div>
       <Button onClick={seedDb} fullWidth style={{ margin: "0 0 20px 0" }}>
-        Generate 10K Promotions
+        Generate 10K Users
       </Button>
       {tableData.length > 0 && (
         <Table headers={headers} data={tableData} actions={actions} />

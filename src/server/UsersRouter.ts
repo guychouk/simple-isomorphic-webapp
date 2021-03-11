@@ -3,23 +3,23 @@ import addFormats from "ajv-formats";
 import { Collection, ObjectId } from "mongodb";
 import express, { ErrorRequestHandler } from "express";
 
-import { generatePromotion } from "../utils";
-import PromotionSchema from "../types/promotion";
+import { generateUser } from "../utils";
+import UserSchema from "../types/user";
 
 const router = express.Router();
 
 const ajv = new Ajv({ allErrors: true });
 addFormats(ajv);
-const validator = ajv.compile(PromotionSchema);
+const validator = ajv.compile(UserSchema);
 
 router
   .route("/")
   .get(async (req, res) => {
-    const promotions: Collection = req.app.locals.db.collections.promotions;
+    const users: Collection = req.app.locals.db.collections.users;
     let { limit = 10, page = 0 } = req.query;
     page = parseInt(page.toString());
     limit = parseInt(limit.toString());
-    const docs = await promotions
+    const docs = await users
       .find({})
       .sort({ _id: 1 })
       .skip(page > 0 ? (page - 1) * limit : 0)
@@ -28,9 +28,9 @@ router
     return res.status(200).json(docs);
   })
   .post(async (req, res) => {
-    const promotions: Collection = req.app.locals.db.collections.promotions;
+    const users: Collection = req.app.locals.db.collections.users;
     if (validator(req.body)) {
-      const inserted = await promotions.insertOne(req.body);
+      const inserted = await users.insertOne(req.body);
       return res.status(201).json(inserted.ops);
     } else {
       return res.status(500).json({ errors: validator.errors });
@@ -40,22 +40,22 @@ router
 router
   .route(/(\w{24})/)
   .get(async (req, res) => {
-    const promotions: Collection = req.app.locals.db.collections.promotions;
-    const docs = await promotions.findOne({ _id: new ObjectId(req.params[0]) });
+    const users: Collection = req.app.locals.db.collections.users;
+    const docs = await users.findOne({ _id: new ObjectId(req.params[0]) });
     return res.json(docs);
   })
   .delete(async (req, res) => {
-    const promotions: Collection = req.app.locals.db.collections.promotions;
-    const docs = await promotions.deleteOne({
+    const users: Collection = req.app.locals.db.collections.users;
+    const docs = await users.deleteOne({
       _id: new ObjectId(req.params[0]),
     });
     return res.status(200).json({});
   })
   .put(async (req, res) => {
     const { params, body } = req;
-    const promotions: Collection = req.app.locals.db.collections.promotions;
+    const users: Collection = req.app.locals.db.collections.users;
     if (validator(req.body)) {
-      const docs = await promotions.updateOne(
+      const docs = await users.updateOne(
         { _id: new ObjectId(req.params[0]) },
         { $set: req.body }
       );
@@ -66,10 +66,10 @@ router
   });
 
 router.route("/generate").get(async (req, res, next) => {
-  const promotions: Collection = req.app.locals.db.collections.promotions;
-  await promotions.remove({});
-  const docs = Array.from({ length: 10000 }, generatePromotion);
-  await promotions.insertMany(docs);
+  const users: Collection = req.app.locals.db.collections.users;
+  await users.remove({});
+  const docs = Array.from({ length: 10000 }, generateUser);
+  await users.insertMany(docs);
   return res.json(docs);
 });
 

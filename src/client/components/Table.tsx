@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 
 import Button, { ButtonProps } from "./Button";
 import { isDate, formatDate } from "../../utils";
-import { MongoDocument } from "../../types/promotion";
+import { MongoDocument } from "../../types/user";
 
 const StyledTable = styled.table`
   width: 100%;

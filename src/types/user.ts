@@ -4,7 +4,7 @@ type MongoDocument = {
   _id: string;
 };
 
-type Promotion = {
+type User = {
   name: string;
   type: "Basic" | "Common" | "Epic";
   startDate: string | Date;
@@ -12,9 +12,9 @@ type Promotion = {
   userGroupName: string;
 };
 
-type PromotionDocument = Promotion & MongoDocument;
+type UserDocument = User & MongoDocument;
 
-const PromotionSchema: JSONSchemaType<Promotion> = {
+const UserSchema: JSONSchemaType<User> = {
   type: "object",
   properties: {
     name: { type: "string" },
@@ -27,6 +27,6 @@ const PromotionSchema: JSONSchemaType<Promotion> = {
   additionalProperties: false,
 };
 
-export default PromotionSchema;
+export default UserSchema;
 
-export { Promotion, MongoDocument, PromotionDocument };
+export { User, UserDocument, MongoDocument };

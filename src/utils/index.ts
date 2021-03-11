@@ -1,4 +1,4 @@
-export { generatePromotion } from "./mock";
+export { generateUser } from "./mock";
 
 export { isDate, getRandomDate, formatDate } from "./date";
 
