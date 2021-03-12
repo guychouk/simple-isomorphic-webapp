@@ -1,7 +1,7 @@
 {
-  "name": "simple-ts-react",
+  "name": "isomorphic-ts-webapp",
   "version": "0.0.1",
-  "description": "A simple example of an isomorphic TypeScript server-client app",
+  "description": "A simple example of an isomorphic JS web app",
   "scripts": {
     "dev": "NODE_ENV=development concurrently npm:dev-*",
     "dev-server": "ts-node-script /src/server/index.ts",
