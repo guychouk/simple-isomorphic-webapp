@@ -3,11 +3,10 @@ import cors from "cors";
 import { MongoClient, Db, Collection } from "mongodb";
 import express, { ErrorRequestHandler } from "express";
 
-import webpack from "webpack";
+import webpack, { Configuration as WebpackConfiguration } from "webpack";
 import webpackDevMiddleware from "webpack-dev-middleware";
 import webpackHotMiddleware from "webpack-hot-middleware";
-import webpackServerConfig from "../../webpack/webpack.server.config";
-import webpackClientConfig from "../../webpack/webpack.client.config";
+import webpackClientConfig from "../../webpack/webpack.client.config.js";
 
 import UsersRouter from "./UsersRouter";
 
@@ -18,7 +17,7 @@ const defaultErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   res.status(500).send("Something broke!");
 };
 
-const compiler = webpack(webpackClientConfig);
+const compiler = webpack(webpackClientConfig as WebpackConfiguration);
 
 app.use(
   webpackDevMiddleware(compiler, {

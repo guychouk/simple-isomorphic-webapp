@@ -1,14 +1,15 @@
-import path from "path";
-import nodeExternals from "webpack-node-externals";
-import { Configuration as WebpackConfiguration } from "webpack";
+const path = require("path");
+const nodeExternals = require("webpack-node-externals");
 
 const { NODE_ENV } = process.env;
 const DEV_MODE = NODE_ENV === "development";
 
-export default <WebpackConfiguration>{
+module.exports = {
   externalsPresets: { node: true },
   externals: [nodeExternals()],
-  entry: "./src/server/index.ts",
+  entry: [
+    path.resolve(__dirname, "..", "src", "server", "index.ts"),
+  ],
   mode: DEV_MODE ? "development" : "production",
   devtool: DEV_MODE ? "inline-source-map" : false,
   resolve: {
@@ -16,7 +17,7 @@ export default <WebpackConfiguration>{
   },
   output: {
     filename: "server.js",
-    path: path.resolve(__dirname, "dist")
+    path: path.resolve(__dirname, "..", "dist")
   },
   module: {
     rules: [

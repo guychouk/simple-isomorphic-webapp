@@ -1,13 +1,12 @@
-import path from "path";
-import nodeExternals from "webpack-node-externals";
-import HtmlWebpackPlugin from "html-webpack-plugin";
-import CopyPlugin from "copy-webpack-plugin";
-import webpack, { Configuration as WebpackConfiguration } from "webpack";
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
+const webpack = require ("webpack");
 
 const { NODE_ENV } = process.env;
 const DEV_MODE = NODE_ENV === "development";
 
-export default <WebpackConfiguration>{
+module.exports = {
   target: "web",
   entry: [
     'react-hot-loader/patch',
@@ -60,7 +59,4 @@ export default <WebpackConfiguration>{
     }),
     new webpack.HotModuleReplacementPlugin(),
   ],
-  devServer: {
-    contentBase: path.join(__dirname, "..", "dist", "public"),
-  },
 }

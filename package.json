@@ -4,8 +4,10 @@
   "description": "A simple example of an isomorphic TypeScript server-client app",
   "scripts": {
     "dev": "NODE_ENV=development concurrently npm:dev-*",
-    "dev-server": "ts-node-script src/server/index.ts",
+    "dev-server": "ts-node-script /src/server/index.ts",
     "dev-mongo": "docker-compose up",
+    "build-server": "node ./build.js server",
+    "build-client": "node ./build.js client",
     "format": "prettier --write src"
   },
   "author": "kutacoder",
