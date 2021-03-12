@@ -17,7 +17,7 @@ Both the server and the client share code which resides in the `types/` and `uti
 ## Development
 - Run `nvm use` to set the proper Node.js version (12.18).
 - Run `npm install`.
-- Run `npm run dev`. This sets up the dev server and the mongodb Docker container.
+- Run `npm run dev`. This sets up the webpack dev server and the mongodb Docker container.
 
 The server is listening on `localhost:8081`.  
-The mongodb instance is listening on `localhost:27018`.
+The mongodb container is listening on `localhost:27018`.
