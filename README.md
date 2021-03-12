@@ -1,6 +1,6 @@
 This is a demo of an isomorphic JS app which generates 10K users and presents them in a table.
 
-The REST API was built with Node.js + Express ❤️.
+The REST API is built with Node.js + Express ❤️.
 
 The users are generated via a REST call to the server, and are stored in MongoDB.
 
