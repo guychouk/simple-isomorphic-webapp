@@ -93,7 +93,7 @@ const Cell = styled.td<{ center?: boolean }>`
 
 const Row = styled.tr`
   &:nth-child(even) {
-    background-color: #e1cdeb;
+    background-color: ${(props) => props.theme.colors.evenRowColor};
   }
 
   @media only screen and (max-width: 768px) {
@@ -123,39 +123,47 @@ const Table: React.FunctionComponent<TableProps> = ({
   data,
   actions,
 }) => {
+  const tableRef = useRef<HTMLTableSectionElement>(null);
+  const [dataWindowIndexes, setDataWindowIndexes] = useState({ start: 0, end: 100 });
+  const [tableHeight, setTableHeight] = useState(0);
   const [dataWindow, setDataWindow] = useState([] as Array<MongoDocument>);
   const [selectedRows, setSelectedRows] = useState({} as RowState);
 
-  const ROW_HEIGHT = 20;
-  const ROWS_IN_BLOCK = 50;
-  const BLOCKS_IN_CLUSTER = 4;
-  const BLOCK_HEIGHT = ROW_HEIGHT * ROWS_IN_BLOCK;
-  const CLUSTER_HEIGHT = BLOCKS_IN_CLUSTER * BLOCK_HEIGHT;
-  const ROWS_IN_CLUSTER = BLOCKS_IN_CLUSTER * ROWS_IN_BLOCK;
-
   const calcIndexes = (scrollTop?: number): { start: number; end: number } => {
-    if (scrollTop === undefined) {
-      return { start: 0, end: ROWS_IN_BLOCK };
+    if (scrollTop === undefined || scrollTop === 0) {
+      const indexes = { start: 0, end: 100 };
+      setDataWindowIndexes(indexes);
+      return indexes;
     }
-    const chunkNumber =
-      Math.floor(scrollTop / (CLUSTER_HEIGHT - BLOCK_HEIGHT)) || 0;
-    const start = Math.max((ROWS_IN_CLUSTER - ROWS_IN_BLOCK) * chunkNumber, 0);
-    const end = start + ROWS_IN_CLUSTER;
-    return { start, end };
+    if (scrollTop >= tableHeight) {
+      const { start, end } = dataWindowIndexes;
+      const indexes = { start: start + 100, end: end + 100 };
+      setDataWindowIndexes(indexes);
+      return indexes;
+    } else {
+      const { start, end } = dataWindowIndexes;
+      const indexes = { start: Math.max(start - 100, 0), end: Math.max(end - 100, 100) };
+      setDataWindowIndexes(indexes);
+      return indexes;
+    }
   };
 
   const debouncedScrollHandler = _.debounce((e: React.SyntheticEvent) => {
     const scrollTop = (e.target as HTMLTableSectionElement).scrollTop;
-    if (scrollTop && scrollTop >= BLOCK_HEIGHT) {
-      const { start, end } = calcIndexes(scrollTop);
-      setDataWindow(data.slice(start, end));
-    }
+    const { start, end } = calcIndexes(scrollTop);
+    setDataWindow(data.slice(start, end));
   }, 150);
 
   useEffect(() => {
     const { start, end } = calcIndexes();
     setDataWindow(data.slice(start, end));
   }, [data]);
+
+  useEffect(() => {
+    if (tableRef.current && tableRef.current.clientHeight > 0) {
+      setTableHeight(tableRef.current.clientHeight);
+    }
+  }, [dataWindow]);
 
   function toggleRow(event: React.SyntheticEvent, id: string) {
     selectedRows[id]
@@ -182,7 +190,7 @@ const Table: React.FunctionComponent<TableProps> = ({
       </StyledTable>
       <div>
         <StyledTable>
-          <TableBody onScroll={debouncedScrollHandler}>
+          <TableBody ref={tableRef} onScroll={debouncedScrollHandler}>
             {dataWindow.map((obj, i) => {
               return (
                 <Row key={obj._id}>

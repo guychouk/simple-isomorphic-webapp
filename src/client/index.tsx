@@ -16,6 +16,7 @@ const Theme: DefaultTheme = {
     main: "#ece6ef",
     general: "#0D0C31",
     important: "#eb5160",
+    evenRowColor: "darkgray",
   },
 };
 

@@ -6,6 +6,7 @@ declare module "styled-components" {
       main: string;
       general: string;
       important: string;
+      evenRowColor: string;
     };
   }
 }
